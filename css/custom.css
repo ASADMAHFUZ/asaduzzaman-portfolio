@@ -1,0 +1,195 @@
+.drawer-root {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+}
+.drawer-root[hidden] {
+  display: none;
+}
+.drawer-mask {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+}
+.drawer-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 75%;
+  background: #1a1c1e;
+  box-shadow: -6px 0 16px rgba(0, 0, 0, 0.08), -3px 0 6px -4px rgba(0, 0, 0, 0.12), -9px 0 28px 8px rgba(0, 0, 0, 0.05);
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.drawer-root.is-open .drawer-panel {
+  transform: translateX(0);
+}
+.menu-open {
+  transform: scale(1.1);
+}
+
+.nav-pill {
+  opacity: 0;
+}
+.nav-link.is-active .nav-pill {
+  opacity: 1;
+}
+.nav-link.is-active .nav-label {
+  color: #fff;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.from-left {
+  transform: translateX(-60px);
+}
+.reveal.from-right {
+  transform: translateX(60px);
+}
+.reveal.from-scale {
+  transform: scale(0.85);
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes hero-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+@keyframes badge-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+@keyframes scroll-dot {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  70% {
+    transform: translateY(14px);
+    opacity: 0.25;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.float-portrait {
+  animation: hero-float 4.8s ease-in-out infinite;
+}
+.float-badge {
+  animation: badge-float 4.8s ease-in-out infinite;
+}
+.scroll-dot {
+  animation: scroll-dot 1.6s ease-in-out infinite;
+}
+
+.service-card {
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.service-card:hover {
+  transform: translateY(-6px);
+}
+.cv-btn {
+  transition: transform 0.25s ease, box-shadow 0.3s ease;
+}
+.cv-btn:hover {
+  transform: translateY(-1px) scale(1.03);
+}
+.cv-btn:active {
+  transform: scale(0.97);
+}
+.footer-social {
+  transition: transform 0.3s ease;
+}
+.footer-social:hover {
+  transform: translateY(-2px) scale(1.15);
+}
+
+.form-field {
+  width: 100%;
+  border-width: 1px;
+  border-style: solid;
+  outline: none;
+  font-family: inherit;
+}
+.form-field.is-invalid {
+  border-color: #ff4d4f !important;
+}
+.field-error {
+  color: #ff4d4f;
+  font-size: 14px;
+  line-height: 1.5;
+  margin-top: 4px;
+  min-height: 0;
+}
+.field-error:empty {
+  display: none;
+}
+
+.toast {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-12px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  color: #363636;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12), 0 3px 3px rgba(0, 0, 0, 0.05);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+.toast-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  flex-shrink: 0;
+}
+.toast.success .toast-icon {
+  background: #61d345;
+}
+.toast.error .toast-icon {
+  background: #ff4b4b;
+}
+
+#send-btn:disabled {
+  opacity: 0.75;
+  cursor: wait;
+}
