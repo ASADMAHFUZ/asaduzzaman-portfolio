@@ -114,7 +114,6 @@ const ICONS = {
 const LINK_META = [
   { key: "figma", label: "Figma" },
   { key: "behance", label: "Behance" },
-  { key: "external", label: "Dribble" },
 ];
 
 const state = { filter: "All", page: 1 };
@@ -402,13 +401,20 @@ function showToast(type, message) {
   }, 3200);
 }
 
+const CONTACT_EMAIL = "mdasadujjaman101@gmail.com";
+
 function setupForm() {
   const form = document.getElementById("contact-form");
   const button = document.getElementById("send-btn");
   const label = document.getElementById("send-label");
+  const nameInput = document.getElementById("name");
+  const emailInput = document.getElementById("email");
+  const subjectInput = document.getElementById("subject");
+  const messageInput = document.getElementById("message");
+
   const fields = {
     name: {
-      input: form.elements.name,
+      input: nameInput,
       error: document.getElementById("name-error"),
       check(value) {
         if (!value.trim()) return "Please input your name!";
@@ -416,7 +422,7 @@ function setupForm() {
       },
     },
     email: {
-      input: form.elements.email,
+      input: emailInput,
       error: document.getElementById("email-error"),
       check(value) {
         if (!value.trim()) return "Please input your email!";
@@ -425,7 +431,7 @@ function setupForm() {
       },
     },
     message: {
-      input: form.elements.message,
+      input: messageInput,
       error: document.getElementById("message-error"),
       check(value) {
         if (!value.trim()) return "Please input your message!";
@@ -445,6 +451,7 @@ function setupForm() {
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
+
     let valid = true;
     Object.values(fields).forEach((field) => {
       const message = field.check(field.input.value);
@@ -453,33 +460,53 @@ function setupForm() {
     });
     if (!valid) return;
 
+    const payload = {
+      name: nameInput.value.trim(),
+      email: emailInput.value.trim(),
+      subject: subjectInput.value.trim(),
+      message: messageInput.value.trim(),
+    };
+
     button.disabled = true;
     label.textContent = "Sending...";
-    const payload = {
-      name: form.elements.name.value.trim(),
-      email: form.elements.email.value.trim(),
-      subject: form.elements.subject.value.trim(),
-      message: form.elements.message.value.trim(),
-    };
 
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
         body: JSON.stringify(payload),
       });
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
+
       if (data.success) {
-        showToast("success", "Message sent successfully!");
+        showToast("success", "Message sent! Check mdasadujjaman101@gmail.com");
         form.reset();
         Object.values(fields).forEach((field) => paint(field, ""));
+      } else if (data.activation) {
+        showToast("error", data.message || "Activate FormSubmit from your Gmail first, then try again.");
       } else {
-        showToast("error", data.error || "Failed to send message.");
+        // Fallback: open mail client so message is never lost on local
+        const mailSubject = encodeURIComponent(payload.subject || `Portfolio message from ${payload.name}`);
+        const mailBody = encodeURIComponent(
+          `Name: ${payload.name}\nEmail: ${payload.email}\n\n${payload.message}`
+        );
+        showToast("error", data.message || "Email service blocked. Opening your mail app as backup...");
+        setTimeout(() => {
+          window.location.href = `mailto:${CONTACT_EMAIL}?subject=${mailSubject}&body=${mailBody}`;
+        }, 900);
       }
     } catch (error) {
-      showToast("success", "Message sent successfully!");
-      form.reset();
-      Object.values(fields).forEach((field) => paint(field, ""));
+      const mailSubject = encodeURIComponent(payload.subject || `Portfolio message from ${payload.name}`);
+      const mailBody = encodeURIComponent(
+        `Name: ${payload.name}\nEmail: ${payload.email}\n\n${payload.message}`
+      );
+      showToast("error", "Local API not running. Opening mail app backup...");
+      setTimeout(() => {
+        window.location.href = `mailto:${CONTACT_EMAIL}?subject=${mailSubject}&body=${mailBody}`;
+      }, 900);
     } finally {
       button.disabled = false;
       label.textContent = "Send Message";

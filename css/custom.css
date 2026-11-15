@@ -105,7 +105,19 @@
 }
 
 .service-card {
+  height: 100%;
   transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.service-card > div {
+  height: 100%;
+}
+.service-card > div > div {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.service-card > div > div > p {
+  flex: 1;
 }
 .service-card:hover {
   transform: translateY(-6px);
