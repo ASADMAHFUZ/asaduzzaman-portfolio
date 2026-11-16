@@ -301,8 +301,17 @@
     requestAnimationFrame(loop);
   }
 
+  function isTypingTarget(el) {
+    if (!el || el === document.body) return false;
+    const tag = el.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return true;
+    if (el.isContentEditable) return true;
+    return Boolean(el.closest && el.closest("input, textarea, select, [contenteditable='true']"));
+  }
+
   function onKeyDown(e) {
     if (e.code === "Space" || e.code === "ArrowUp") {
+      if (isTypingTarget(e.target) || isTypingTarget(document.activeElement)) return;
       e.preventDefault();
       if (e.repeat) return;
       jump();
@@ -311,6 +320,7 @@
 
   function onKeyUp(e) {
     if (e.code === "Space" || e.code === "ArrowUp") {
+      if (isTypingTarget(e.target) || isTypingTarget(document.activeElement)) return;
       e.preventDefault();
       releaseJump();
     }

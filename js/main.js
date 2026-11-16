@@ -1,41 +1,44 @@
 const PROJECTS = [
   {
-    id: 1,
-    title: "CareBox",
-    subtitle: "A Social Impact UX CASE STUDY",
-    description: "to Share, Donate & Resell Essentials.",
-    category: "Mobile App Design",
-    image: "images/carebox.png",
+    id: 3,
+    title: "Dokter For You",
+    subtitle: "SaaS · Website / App",
+    description: "Health & Medical platform",
+    category: "Website Design",
+    image: "images/dokter.jpg",
     links: {
-      figma: "https://figma.com/carebox",
-      behance: "https://behance.net/carebox",
-      external: "https://carebox.com",
+      figma:
+        "https://www.figma.com/design/UWOebS5VoH1SANwcA4E5jJ/Healthcare-Platform-Website?node-id=0-1&t=j31GsDVMnBtL7mMW-1",
+      behance:
+        "https://www.behance.net/gallery/239235413/Dokter-For-You-Health-care-(website-app)-project",
+      website: "https://www.dokterforyou.com/en",
+    },
+  },
+  {
+    id: 1,
+    title: "Luggage Tracking App for travelers",
+    subtitle: "MVP / SaaS · Mobile App",
+    description: "Trkli — tracking device app",
+    category: "Mobile App Design",
+    image: "images/trkli.jpg",
+    links: {
+      figma:
+        "https://www.figma.com/design/ujb90RccE3ypavkWbp5Lz3/Luggage-Tracking-App?node-id=0-1&t=crt7wZWSUXmtOGim-1",
+      behance: "https://www.behance.net/gallery/256234413/Luggage-Tracking-Appfor-travelers",
+      app: "https://apps.apple.com/il/app/trkli/id6749178737",
     },
   },
   {
     id: 2,
-    title: "Inventory",
-    subtitle: "Management App",
-    description: "",
-    category: "Mobile App Design",
-    image: "images/inventory.png",
+    title: "Freewater RPG Game",
+    subtitle: "UX/UI Case Study",
+    description: "RPG mobile game",
+    category: "Game Design",
+    image: "images/freewater.jpg",
     links: {
-      figma: "https://figma.com/inventory",
-      behance: "https://behance.net/inventory",
-      external: "https://inventory-app.com",
-    },
-  },
-  {
-    id: 3,
-    title: "Dokter For You",
-    subtitle: "Health & Medical",
-    description: "INTERNATIONAL E-HEALTH PLATFORM",
-    category: "Website Design",
-    image: "images/dokter.png",
-    links: {
-      figma: "https://figma.com/dokterforyou",
-      behance: "https://behance.net/dokterforyou",
-      external: "https://dokterforyou.com",
+      figma:
+        "https://www.figma.com/design/UrACttMBiq4PCiMspElTty/Learning-Renaissance-vr-mobile-game?node-id=0-1&t=MBi3FBGfAblDEWFL-1",
+      behance: "https://www.behance.net/gallery/257345143/Freewater-RPG-Game-Case-Study",
     },
   },
   {
@@ -48,7 +51,6 @@ const PROJECTS = [
     links: {
       figma: "https://figma.com/ecoshop",
       behance: "https://behance.net/ecoshop",
-      external: "https://ecoshop.com",
     },
   },
   {
@@ -62,7 +64,6 @@ const PROJECTS = [
     links: {
       figma: "https://figma.com/mindspace",
       behance: "https://behance.net/mindspace",
-      external: "https://mindspace-app.com",
     },
   },
   {
@@ -75,7 +76,6 @@ const PROJECTS = [
     links: {
       figma: "https://figma.com/dragonquest",
       behance: "https://behance.net/dragonquest",
-      external: "https://dragonquest-game.com",
     },
   },
   {
@@ -88,13 +88,12 @@ const PROJECTS = [
     links: {
       figma: "https://figma.com/dragonquest",
       behance: "https://behance.net/dragonquest",
-      external: "https://dragonquest-game.com",
     },
   },
 ];
 
 const PAGE_SIZE = 6;
-const FILTERS = ["All", "Website Design", "Mobile App Design", "Game Design", "3D"];
+const FILTERS = ["All", "Website Design", "Mobile App Design", "Game Design", "Branding"];
 
 const ICONS = {
   figma:
@@ -112,14 +111,25 @@ const ICONS = {
 };
 
 const LINK_META = [
-  { key: "figma", label: "Figma" },
-  { key: "behance", label: "Behance" },
+  { key: "figma", label: "Figma", icon: "figma" },
+  { key: "behance", label: "Behance", icon: "behance" },
 ];
 
 const state = { filter: "All", page: 1 };
 
 function openUrl(url) {
+  if (!url) return;
   window.open(url, "_blank", "noopener,noreferrer");
+}
+
+function projectLiveLink(project) {
+  return project.links?.website || project.links?.app || project.links?.external || "";
+}
+
+function projectLiveLabel(project) {
+  if (project.links?.app) return "Open app";
+  if (project.links?.website || project.links?.external) return "Visit website";
+  return "Open link";
 }
 
 function filteredProjects() {
@@ -128,14 +138,20 @@ function filteredProjects() {
 }
 
 function iconButton(project, meta) {
+  const url = project.links?.[meta.key];
+  if (!url) return null;
+
   const button = document.createElement("button");
   button.type = "button";
   button.className =
     "w-11 h-11 flex items-center justify-center bg-white/10 backdrop-blur-md rounded-full border border-white/15 hover:bg-gradient-to-br hover:from-[#FF8D5E] hover:to-[#FF6B6B] hover:border-transparent transition-all duration-200 hover:shadow-[0_0_20px_rgba(255,141,94,0.35)]";
   button.setAttribute("aria-label", `View ${project.title} on ${meta.label}`);
   button.title = `View on ${meta.label}`;
-  button.innerHTML = ICONS[meta.key];
-  button.addEventListener("click", () => openUrl(project.links[meta.key]));
+  button.innerHTML = ICONS[meta.icon || meta.key];
+  button.addEventListener("click", (event) => {
+    event.stopPropagation();
+    openUrl(url);
+  });
   return button;
 }
 
@@ -190,7 +206,10 @@ function renderProjects() {
     const actions = document.createElement("div");
     actions.className =
       "flex items-center gap-3 translate-y-5 group-hover:translate-y-0 transition-transform duration-300 ease-out";
-    LINK_META.forEach((meta) => actions.appendChild(iconButton(project, meta)));
+    LINK_META.forEach((meta) => {
+      const button = iconButton(project, meta);
+      if (button) actions.appendChild(button);
+    });
     overlay.appendChild(actions);
 
     media.append(img, badge, overlay);
@@ -214,14 +233,20 @@ function renderProjects() {
     subtitle.textContent = project.subtitle;
     text.append(title, subtitle);
 
-    const visit = document.createElement("button");
-    visit.type = "button";
-    visit.className =
-      "flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-lg bg-white/[0.04] border border-white/[0.06] hover:bg-gradient-to-br hover:from-[#FF8D5E]/20 hover:to-[#FF6B6B]/20 hover:border-[#FF8D5E]/30 transition-all duration-300 mt-0.5";
-    visit.setAttribute("aria-label", `Visit ${project.title}`);
-    visit.innerHTML = ICONS.visit;
-    visit.addEventListener("click", () => openUrl(project.links.external));
-    row.append(text, visit);
+    const liveUrl = projectLiveLink(project);
+    if (liveUrl) {
+      const visit = document.createElement("button");
+      visit.type = "button";
+      visit.className =
+        "flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-lg bg-white/[0.04] border border-white/[0.06] hover:bg-gradient-to-br hover:from-[#FF8D5E]/20 hover:to-[#FF6B6B]/20 hover:border-[#FF8D5E]/30 transition-all duration-300 mt-0.5";
+      visit.setAttribute("aria-label", `${projectLiveLabel(project)}: ${project.title}`);
+      visit.title = projectLiveLabel(project);
+      visit.innerHTML = ICONS.visit;
+      visit.addEventListener("click", () => openUrl(liveUrl));
+      row.append(text, visit);
+    } else {
+      row.append(text);
+    }
     body.append(rule, row);
 
     if (project.description) {
@@ -514,6 +539,48 @@ function setupForm() {
   });
 }
 
+function fitHeroRole() {
+  const name = document.querySelector(".hero-name");
+  const role = document.querySelector(".hero-role");
+  if (!name || !role) return;
+
+  role.style.fontSize = "";
+  const nameStyle = getComputedStyle(name);
+  const baseSize = parseFloat(nameStyle.fontSize);
+  if (!baseSize) return;
+
+  const range = document.createRange();
+  const textNode = name.firstChild;
+  if (!textNode || textNode.nodeType !== Node.TEXT_NODE) return;
+  range.selectNodeContents(textNode);
+  const lines = [...range.getClientRects()];
+  const targetWidth = lines[0] ? lines[0].width : name.getBoundingClientRect().width;
+  if (!targetWidth) return;
+
+  const measure = (size) => {
+    const span = document.createElement("span");
+    span.style.cssText = `position:absolute;visibility:hidden;white-space:nowrap;font:${nameStyle.fontStyle} ${getComputedStyle(role).fontWeight} ${size}px/${nameStyle.lineHeight} ${nameStyle.fontFamily};letter-spacing:${getComputedStyle(role).letterSpacing};`;
+    span.textContent = role.textContent.trim();
+    document.body.appendChild(span);
+    const width = span.getBoundingClientRect().width;
+    span.remove();
+    return width;
+  };
+
+  let lo = baseSize * 0.7;
+  let hi = baseSize * 1.35;
+  let best = baseSize;
+  for (let i = 0; i < 20; i += 1) {
+    const mid = (lo + hi) / 2;
+    const width = measure(mid);
+    best = mid;
+    if (Math.abs(width - targetWidth) < 0.5) break;
+    if (width < targetWidth) lo = mid;
+    else hi = mid;
+  }
+  role.style.fontSize = `${best.toFixed(2)}px`;
+}
+
 document.getElementById("year").textContent = String(new Date().getFullYear());
 document.getElementById("back-to-top").addEventListener("click", () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -525,3 +592,6 @@ setupScrollSpy();
 setupReveal();
 setupMenu();
 setupForm();
+fitHeroRole();
+window.addEventListener("resize", fitHeroRole);
+document.fonts?.ready?.then(fitHeroRole);
