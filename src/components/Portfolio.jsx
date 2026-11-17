@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
-import { FILTERS, PAGE_SIZE, PROJECTS } from '../data/projects';
+import {
+  FILTERS,
+  PAGE_SIZE,
+  PROJECTS,
+  getProjectBadge,
+  projectMatchesFilter,
+} from '../data/projects';
 import { BehanceIcon, FigmaIcon, GlobeIcon, NextIcon, PrevIcon } from './icons';
 
 const LINK_META = [
@@ -20,7 +26,7 @@ function openUrl(url) {
   window.open(url, '_blank', 'noopener,noreferrer');
 }
 
-function ProjectCard({ project, index }) {
+function ProjectCard({ project, index, activeFilter }) {
   const [entered, setEntered] = useState(false);
 
   useEffect(() => {
@@ -34,6 +40,8 @@ function ProjectCard({ project, index }) {
   ]
     .filter(Boolean)
     .join(' ');
+
+  const badge = getProjectBadge(project, activeFilter);
 
   return (
     <article
@@ -59,7 +67,7 @@ function ProjectCard({ project, index }) {
             />
             <div className="absolute top-4 left-4">
               <span className="px-3 py-1 text-[11px] font-semibold uppercase tracking-wider bg-black/50 backdrop-blur-md text-white/90 rounded-full border border-white/10">
-                {project.category}
+                {badge}
               </span>
             </div>
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
@@ -114,10 +122,10 @@ export default function Portfolio() {
   const [filter, setFilter] = useState('All');
   const [page, setPage] = useState(1);
 
-  const filtered = useMemo(() => {
-    if (filter === 'All') return PROJECTS;
-    return PROJECTS.filter((project) => project.category === filter);
-  }, [filter]);
+  const filtered = useMemo(
+    () => PROJECTS.filter((project) => projectMatchesFilter(project, filter)),
+    [filter],
+  );
 
   const pages = Math.ceil(filtered.length / PAGE_SIZE) || 1;
   const safePage = page > pages ? pages : page;
@@ -176,46 +184,59 @@ export default function Portfolio() {
         </div>
         <div id="project-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
           {visible.map((project, index) => (
-            <ProjectCard key={`${project.id}-${safePage}`} project={project} index={index} />
+            <ProjectCard
+              key={`${project.id}-${safePage}-${filter}`}
+              project={project}
+              index={index}
+              activeFilter={filter}
+            />
           ))}
         </div>
         <div
           id="pagination"
-          className={`flex items-center justify-center gap-2${filtered.length > PAGE_SIZE ? ' mt-14' : ''}`}
+          className={`flex items-center justify-center${filtered.length > PAGE_SIZE ? ' mt-14' : ''}`}
         >
           {filtered.length > PAGE_SIZE ? (
-            <>
+            <div className="flex items-center gap-4 sm:gap-5">
               <button
                 type="button"
-                className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                aria-label="Previous page"
+                className="w-11 h-11 flex items-center justify-center rounded-xl bg-white/[0.04] border border-white/10 text-gray-400 hover:bg-white/[0.08] hover:text-white hover:border-[#FF8D5E]/35 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-white/[0.04] disabled:hover:border-white/10 disabled:hover:text-gray-400 transition-all duration-300"
                 disabled={safePage === 1}
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
               >
                 <PrevIcon />
               </button>
-              {Array.from({ length: pages }, (_, i) => i + 1).map((pageNum) => (
-                <button
-                  key={pageNum}
-                  type="button"
-                  className={`w-10 h-10 flex items-center justify-center rounded-xl font-medium text-sm transition-all ${
-                    pageNum === safePage
-                      ? 'bg-gradient-to-r from-[#FF8D5E] to-[#FF6B6B] !text-white shadow-[0_4px_15px_rgba(255,107,107,0.3)]'
-                      : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10 hover:text-white'
-                  }`}
-                  onClick={() => setPage(pageNum)}
-                >
-                  {pageNum}
-                </button>
-              ))}
+
+              <div className="flex items-center gap-3 px-3 py-2 rounded-2xl bg-white/[0.03] border border-white/[0.07]">
+                {Array.from({ length: pages }, (_, i) => i + 1).map((pageNum) => (
+                  <button
+                    key={pageNum}
+                    type="button"
+                    aria-label={`Go to page ${pageNum}`}
+                    aria-current={pageNum === safePage ? 'page' : undefined}
+                    className={`w-11 h-11 flex items-center justify-center rounded-xl font-medium text-sm transition-all duration-300 ${
+                      pageNum === safePage
+                        ? 'bg-gradient-to-r from-[#FF8D5E] to-[#FF6B6B] !text-white shadow-[0_4px_18px_rgba(255,107,107,0.35)] scale-[1.02]'
+                        : 'bg-transparent text-gray-400 border border-transparent hover:bg-white/[0.06] hover:text-white hover:border-white/10'
+                    }`}
+                    onClick={() => setPage(pageNum)}
+                  >
+                    {pageNum}
+                  </button>
+                ))}
+              </div>
+
               <button
                 type="button"
-                className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                aria-label="Next page"
+                className="w-11 h-11 flex items-center justify-center rounded-xl bg-white/[0.04] border border-white/10 text-gray-400 hover:bg-white/[0.08] hover:text-white hover:border-[#FF8D5E]/35 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-white/[0.04] disabled:hover:border-white/10 disabled:hover:text-gray-400 transition-all duration-300"
                 disabled={safePage === pages}
                 onClick={() => setPage((p) => Math.min(pages, p + 1))}
               >
                 <NextIcon />
               </button>
-            </>
+            </div>
           ) : null}
         </div>
       </div>

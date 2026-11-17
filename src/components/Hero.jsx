@@ -1,5 +1,22 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Behance, Download, Dribbble, Facebook, LinkedIn } from './icons';
+
+const RESUME_FILE = '/resume.pdf';
+const RESUME_DOWNLOAD_NAME = 'Md Asadujjaman Mahfuz Resume for 𝗣𝗿𝗼𝗱𝘂𝗰𝘁 𝗗𝗲𝘀𝗶𝗴𝗻𝗲𝗿.pdf';
+
+async function downloadResume() {
+  const response = await fetch(RESUME_FILE);
+  if (!response.ok) throw new Error('Resume unavailable');
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = RESUME_DOWNLOAD_NAME;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
 
 function fitHeroRole(nameEl, roleEl) {
   if (!nameEl || !roleEl) return;
@@ -44,6 +61,7 @@ function fitHeroRole(nameEl, roleEl) {
 export default function Hero({ onNavClick }) {
   const nameRef = useRef(null);
   const roleRef = useRef(null);
+  const [cvBusy, setCvBusy] = useState(false);
 
   useEffect(() => {
     const run = () => fitHeroRole(nameRef.current, roleRef.current);
@@ -52,6 +70,20 @@ export default function Hero({ onNavClick }) {
     document.fonts?.ready?.then(run);
     return () => window.removeEventListener('resize', run);
   }, []);
+
+  const onDownloadCv = async (event) => {
+    event.preventDefault();
+    if (cvBusy) return;
+    setCvBusy(true);
+    try {
+      await downloadResume();
+    } catch {
+      // Fallback: open the PDF if blob download fails
+      window.open(RESUME_FILE, '_blank', 'noopener,noreferrer');
+    } finally {
+      setCvBusy(false);
+    }
+  };
 
   return (
     <section
@@ -115,13 +147,15 @@ export default function Hero({ onNavClick }) {
             </p>
             <div className="flex items-center justify-center lg:justify-start pt-3 sm:pt-4">
               <a
-                href="/resume.pdf"
-                download="Md Asadujjaman Mahfuz Resume for 𝗣𝗿𝗼𝗱𝘂𝗰𝘁 𝗗𝗲𝘀𝗶𝗴𝗻𝗲𝗿.pdf"
+                href={RESUME_FILE}
+                download={RESUME_DOWNLOAD_NAME}
+                onClick={onDownloadCv}
+                aria-busy={cvBusy}
                 className="cv-btn bg-gradient-to-r from-[#FF7A57] via-[#FF6C62] to-[#FF5E6A] text-white px-7 sm:px-8 py-3.5 sm:py-3.5 rounded-2xl text-base sm:text-lg font-bold shadow-[0_6px_25px_rgba(255,100,90,0.45)] hover:shadow-[0_10px_32px_rgba(255,100,90,0.65)] transition-all duration-300 flex items-center gap-3 cursor-pointer"
               >
                 <Download style={{ color: '#ffffff' }} />
                 <span className="text-white" style={{ color: '#ffffff' }}>
-                  Download CV
+                  {cvBusy ? 'Downloading...' : 'Download CV'}
                 </span>
               </a>
             </div>

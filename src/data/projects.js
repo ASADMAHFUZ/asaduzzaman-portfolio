@@ -1,13 +1,50 @@
 export const PAGE_SIZE = 6;
 export const FILTERS = ["All", "Website Design", "Mobile App Design", "Game Design", "Branding"];
 
+/**
+ * productType (for future edits):
+ * - "saas" or "both" → list under Website Design + Mobile App Design
+ * - "website" → Website Design only
+ * - "app" → Mobile App Design only
+ * - omit and set `categories` manually for Game Design / Branding / custom mixes
+ */
+export function getProjectCategories(project) {
+  if (Array.isArray(project.categories) && project.categories.length > 0) {
+    return project.categories;
+  }
+
+  if (project.productType === "saas" || project.productType === "both") {
+    return ["Website Design", "Mobile App Design"];
+  }
+  if (project.productType === "website") return ["Website Design"];
+  if (project.productType === "app") return ["Mobile App Design"];
+
+  if (project.category) return [project.category];
+  return [];
+}
+
+export function projectMatchesFilter(project, filter) {
+  if (filter === "All") return true;
+  return getProjectCategories(project).includes(filter);
+}
+
+export function getProjectBadge(project, activeFilter = "All") {
+  const categories = getProjectCategories(project);
+  if (activeFilter !== "All" && categories.includes(activeFilter)) {
+    return activeFilter;
+  }
+  if (categories.length <= 1) return categories[0] || "";
+  return categories.map((name) => name.replace(" Design", "")).join(" · ");
+}
+
 export const PROJECTS = [
   {
     id: 3,
     title: "Dokter For You",
     subtitle: "SaaS · Website / App",
     description: "Health & Medical platform",
-    category: "Website Design",
+    productType: "saas",
+    categories: ["Website Design", "Mobile App Design"],
     image: "/images/dokter.jpg",
     links: {
       figma:
@@ -22,7 +59,8 @@ export const PROJECTS = [
     title: "Luggage Tracking App for travelers",
     subtitle: "MVP / SaaS · Mobile App",
     description: "Trkli — tracking device app",
-    category: "Mobile App Design",
+    productType: "app",
+    categories: ["Mobile App Design"],
     image: "/images/trkli.jpg",
     links: {
       figma:
@@ -36,7 +74,7 @@ export const PROJECTS = [
     title: "Freewater RPG Game",
     subtitle: "UX/UI Case Study",
     description: "RPG mobile game",
-    category: "Game Design",
+    categories: ["Game Design"],
     image: "/images/freewater.jpg",
     links: {
       figma:
@@ -49,7 +87,8 @@ export const PROJECTS = [
     title: "CareerMate AI",
     subtitle: "Smart Career Companion",
     description: "UI/UX Case Study",
-    category: "Website Design",
+    productType: "website",
+    categories: ["Website Design"],
     image: "/images/careermate.png",
     imagePosition: "object-top",
     links: {
@@ -62,7 +101,8 @@ export const PROJECTS = [
     title: "CareBox",
     subtitle: "Give New Life to Unused Essentials",
     description: "A Social Impact UX Case Study",
-    category: "Mobile App Design",
+    productType: "app",
+    categories: ["Mobile App Design"],
     image: "/images/carebox.png",
     links: {
       behance:
@@ -74,7 +114,7 @@ export const PROJECTS = [
     title: "Dragon Quest",
     subtitle: "Fantasy RPG",
     description: "Epic Adventure Gaming Experience",
-    category: "Game Design",
+    categories: ["Game Design"],
     image: "/images/carebox.png",
     links: {
       figma: "https://figma.com/dragonquest",
@@ -86,7 +126,7 @@ export const PROJECTS = [
     title: "Dragon Quest",
     subtitle: "Fantasy RPG",
     description: "Epic Adventure Gaming Experience",
-    category: "Game Design",
+    categories: ["Game Design"],
     image: "/images/carebox.png",
     links: {
       figma: "https://figma.com/dragonquest",
