@@ -7,6 +7,7 @@ import Navbar from './components/Navbar';
 import Portfolio from './components/Portfolio';
 import Skills from './components/Skills';
 import Toast from './components/Toast';
+import { useClickSound } from './hooks/useClickSound';
 import { useReveal } from './hooks/useReveal';
 import { useScrollSpy } from './hooks/useScrollSpy';
 
@@ -17,6 +18,7 @@ export default function App() {
   const toastTimerRef = useRef(null);
 
   useReveal();
+  useClickSound();
 
   const showToast = useCallback((type, message) => {
     if (toastTimerRef.current) clearTimeout(toastTimerRef.current);

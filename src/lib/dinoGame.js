@@ -1,3 +1,5 @@
+import { playDinoHit, playDinoJump, playDinoScore } from "./dinoSounds.js";
+
 export function initDinoGame(canvas, statusEl) {
   if (!canvas) return () => {};
 
@@ -47,6 +49,7 @@ export function initDinoGame(canvas, statusEl) {
   let ready = false;
   let lastTime = 0;
   let keyHeld = false;
+  let scoreMilestone = 0;
 
   const imgs = {
     stand: new Image(),
@@ -106,6 +109,7 @@ export function initDinoGame(canvas, statusEl) {
     spawnIn = CLEAR;
     obstacles = [];
     keyHeld = false;
+    scoreMilestone = 0;
     groundDino();
     placeDino();
     if (statusEl) statusEl.textContent = "";
@@ -120,6 +124,7 @@ export function initDinoGame(canvas, statusEl) {
     keyHeld = true;
     dino.jumping = true;
     dino.vy = JUMP_V;
+    playDinoJump();
   }
 
   function releaseJump() {
@@ -163,6 +168,11 @@ export function initDinoGame(canvas, statusEl) {
     frame += dt;
     distance += speed * dt;
     score = distance * 0.018;
+    const milestone = Math.floor(score / 100);
+    if (milestone > scoreMilestone) {
+      scoreMilestone = milestone;
+      playDinoScore();
+    }
     if (speed < MAX_SPEED) speed += ACCEL * dt * 16;
 
     if (dino.jumping) {
@@ -201,6 +211,7 @@ export function initDinoGame(canvas, statusEl) {
       if (hit(box, ob)) {
         running = false;
         crashed = true;
+        playDinoHit();
         if (score > highScore) {
           highScore = Math.floor(score);
           localStorage.setItem(HI_KEY, String(highScore));
