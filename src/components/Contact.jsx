@@ -1,8 +1,7 @@
 import { useRef, useState } from 'react';
 import { Behance, Dribbble, EmailIcon, Facebook, LinkedIn, LocationIcon, PhoneIcon, SendIcon } from './icons';
 import DinoGame from './DinoGame';
-
-const CONTACT_EMAIL = 'mdasadujjaman101@gmail.com';
+import { CONTACT_EMAIL, sendContactMessage } from '../lib/sendContact';
 
 const fieldChecks = {
   name: (value) => (!value.trim() ? 'Please input your name!' : ''),
@@ -64,15 +63,7 @@ export default function Contact({ showToast }) {
 
     setSending(true);
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-      const data = await response.json().catch(() => ({}));
+      const data = await sendContactMessage(payload);
 
       if (data.success) {
         showToast('success', 'Message sent! Check mdasadujjaman101@gmail.com');
@@ -82,13 +73,19 @@ export default function Contact({ showToast }) {
           ref.current?.classList.remove('is-invalid'),
         );
       } else if (data.activation) {
-        showToast('error', data.message || 'Activate FormSubmit from your Gmail first, then try again.');
+        showToast(
+          'error',
+          data.message || 'Activate FormSubmit from your Gmail first, then try again.',
+        );
       } else {
-        showToast('error', data.message || 'Email service blocked. Opening your mail app as backup...');
+        showToast(
+          'error',
+          data.message || 'Could not send message. Opening your mail app as backup...',
+        );
         setTimeout(() => openMailBackup(payload), 900);
       }
     } catch {
-      showToast('error', 'Local API not running. Opening mail app backup...');
+      showToast('error', 'Could not send message. Opening your mail app as backup...');
       setTimeout(() => openMailBackup(payload), 900);
     } finally {
       setSending(false);
