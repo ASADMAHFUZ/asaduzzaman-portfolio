@@ -77,9 +77,8 @@ export default function Skills() {
           </p>
         </div>
         <div
-          className="grid max-w-6xl mx-auto gap-4 sm:gap-6"
+          className="grid max-w-6xl mx-auto gap-3 sm:gap-4 md:gap-6 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7"
           id="skill-list"
-          style={{ gridTemplateColumns: 'repeat(7, minmax(0, 1fr))' }}
         >
           {SKILLS.map((skill) => (
             <div key={skill.name} className="group relative reveal from-scale">

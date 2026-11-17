@@ -103,11 +103,36 @@
 }
 .hero-name {
   max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 .hero-role {
   white-space: nowrap;
   width: max-content;
   max-width: 100%;
+}
+@media (max-width: 379px) {
+  .hero-role {
+    white-space: normal;
+    width: auto;
+  }
+}
+
+/* Soften float motion on small screens / reduced motion */
+@media (max-width: 639px) {
+  .float-portrait {
+    animation-duration: 5.6s;
+  }
+  .float-badge {
+    animation-duration: 5.6s;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .float-portrait,
+  .float-badge,
+  .scroll-dot {
+    animation: none;
+  }
 }
 
 .float-portrait {

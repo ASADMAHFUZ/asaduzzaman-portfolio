@@ -6,9 +6,9 @@ export default function About() {
     <div id="about" className="bg-[#1a1d21] w-full relative overflow-hidden">
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-[#FF8D5E]/5 to-transparent rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-to-tr from-[#FF6B6B]/5 to-transparent rounded-full blur-[100px] pointer-events-none" />
-      <div className="w-full max-w-7xl mx-auto py-24 px-6 sm:px-8 lg:px-8 relative z-10">
+      <div className="w-full max-w-7xl mx-auto py-14 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 relative z-10">
         <div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-5 mb-10 sm:mb-16">
             {SERVICES.map((service) => {
               const Icon = SERVICE_ICONS[service.icon];
               return (
