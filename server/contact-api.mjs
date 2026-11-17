@@ -1,25 +1,12 @@
-const http = require("http");
-const fs = require("fs");
-const path = require("path");
-const { URL } = require("url");
+import http from "node:http";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const ROOT = __dirname;
-const PORT = Number(process.env.PORT) || 5500;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = path.resolve(__dirname, "..");
+const PORT = Number(process.env.CONTACT_PORT) || 5501;
 const CONTACT_EMAIL = "mdasadujjaman101@gmail.com";
-
-const MIME = {
-  ".html": "text/html; charset=utf-8",
-  ".css": "text/css; charset=utf-8",
-  ".js": "application/javascript; charset=utf-8",
-  ".png": "image/png",
-  ".jpg": "image/jpeg",
-  ".jpeg": "image/jpeg",
-  ".ico": "image/x-icon",
-  ".pdf": "application/pdf",
-  ".svg": "image/svg+xml",
-  ".webp": "image/webp",
-  ".json": "application/json; charset=utf-8",
-};
 
 function sendJson(res, status, data) {
   const body = JSON.stringify(data);
@@ -49,7 +36,7 @@ function saveLocalCopy(payload) {
   if (fs.existsSync(file)) {
     try {
       list = JSON.parse(fs.readFileSync(file, "utf8"));
-    } catch (_) {
+    } catch {
       list = [];
     }
   }
@@ -72,8 +59,8 @@ async function forwardToFormSubmit(payload) {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/x-www-form-urlencoded",
-      Origin: `http://127.0.0.1:${PORT}`,
-      Referer: `http://127.0.0.1:${PORT}/`,
+      Origin: "http://127.0.0.1:5500",
+      Referer: "http://127.0.0.1:5500/",
     },
     body: body.toString(),
   });
@@ -85,16 +72,7 @@ async function forwardToFormSubmit(payload) {
 async function handleContact(req, res) {
   try {
     const raw = await readBody(req);
-    let payload = {};
-    const contentType = req.headers["content-type"] || "";
-
-    if (contentType.includes("application/json")) {
-      payload = JSON.parse(raw || "{}");
-    } else {
-      const params = new URLSearchParams(raw);
-      payload = Object.fromEntries(params.entries());
-    }
-
+    const payload = JSON.parse(raw || "{}");
     const name = String(payload.name || "").trim();
     const email = String(payload.email || "").trim();
     const subject = String(payload.subject || "").trim();
@@ -142,26 +120,6 @@ async function handleContact(req, res) {
   }
 }
 
-function serveStatic(req, res, pathname) {
-  let urlPath = decodeURIComponent(pathname);
-  if (urlPath === "/") urlPath = "/index.html";
-  const filePath = path.normalize(path.join(ROOT, urlPath.replace(/^\/+/, "")));
-  if (!filePath.startsWith(ROOT)) {
-    res.writeHead(403);
-    return res.end("Forbidden");
-  }
-  fs.readFile(filePath, (err, data) => {
-    if (err) {
-      res.writeHead(404);
-      return res.end("Not found");
-    }
-    res.writeHead(200, {
-      "Content-Type": MIME[path.extname(filePath).toLowerCase()] || "application/octet-stream",
-    });
-    res.end(data);
-  });
-}
-
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host || "127.0.0.1"}`);
 
@@ -173,16 +131,10 @@ const server = http.createServer(async (req, res) => {
     return handleContact(req, res);
   }
 
-  if (req.method === "GET" || req.method === "HEAD") {
-    return serveStatic(req, res, url.pathname);
-  }
-
-  res.writeHead(405);
-  res.end("Method not allowed");
+  res.writeHead(404);
+  res.end("Not found");
 });
 
 server.listen(PORT, "127.0.0.1", () => {
-  console.log(`Portfolio running at http://127.0.0.1:${PORT}`);
-  console.log(`Contact API: POST http://127.0.0.1:${PORT}/api/contact`);
-  console.log(`Messages go to: ${CONTACT_EMAIL}`);
+  console.log(`Contact API at http://127.0.0.1:${PORT}/api/contact`);
 });

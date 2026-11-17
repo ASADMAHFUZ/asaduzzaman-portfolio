@@ -1,7 +1,5 @@
-(function () {
-  const canvas = document.getElementById("dino-game");
-  const statusEl = document.getElementById("dino-status");
-  if (!canvas) return;
+export function initDinoGame(canvas, statusEl) {
+  if (!canvas) return () => {};
 
   const ctx = canvas.getContext("2d");
   canvas.tabIndex = 0;
@@ -285,7 +283,11 @@
     }
   }
 
+  let stopped = false;
+  let rafId = 0;
+
   function loop(now) {
+    if (stopped) return;
     if (!lastTime) lastTime = now;
     const dt = Math.min((now - lastTime) / (1000 / 60), 3);
     lastTime = now;
@@ -298,7 +300,7 @@
     }
 
     draw();
-    requestAnimationFrame(loop);
+    rafId = requestAnimationFrame(loop);
   }
 
   function isTypingTarget(el) {
@@ -334,24 +336,36 @@
   }
 
   Promise.all([
-    load(imgs.stand, "images/footer/dino-stand.svg"),
-    load(imgs.runA, "images/footer/dino-run-a.svg"),
-    load(imgs.runB, "images/footer/dino-run-b.svg"),
-    load(imgs.cactA, "images/footer/cactus-b.svg"),
-    load(imgs.cactB, "images/footer/cactus-wide.svg"),
+    load(imgs.stand, "/images/footer/dino-stand.svg"),
+    load(imgs.runA, "/images/footer/dino-run-a.svg"),
+    load(imgs.runB, "/images/footer/dino-run-b.svg"),
+    load(imgs.cactA, "/images/footer/cactus-b.svg"),
+    load(imgs.cactB, "/images/footer/cactus-wide.svg"),
   ]).then(() => {
     ready = true;
     draw();
   });
 
+  const onContextMenu = (e) => e.preventDefault();
   window.addEventListener("resize", resize);
   window.addEventListener("keydown", onKeyDown);
   window.addEventListener("keyup", onKeyUp);
   canvas.addEventListener("pointerdown", onPointerDown);
   canvas.addEventListener("pointerup", releaseJump);
-  canvas.addEventListener("contextmenu", (e) => e.preventDefault());
+  canvas.addEventListener("contextmenu", onContextMenu);
 
   resize();
   if (statusEl) statusEl.textContent = "Press Space or ↑ to play";
-  requestAnimationFrame(loop);
-})();
+  rafId = requestAnimationFrame(loop);
+
+  return () => {
+    stopped = true;
+    cancelAnimationFrame(rafId);
+    window.removeEventListener("resize", resize);
+    window.removeEventListener("keydown", onKeyDown);
+    window.removeEventListener("keyup", onKeyUp);
+    canvas.removeEventListener("pointerdown", onPointerDown);
+    canvas.removeEventListener("pointerup", releaseJump);
+    canvas.removeEventListener("contextmenu", onContextMenu);
+  };
+}

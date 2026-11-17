@@ -1,0 +1,16 @@
+export const SKILLS = [
+  { name: "Figma", src: "/images/figma.6d44bc87.png" },
+  { name: "Adobe XD", src: "/images/adobe_XD.131edd85.png" },
+  { name: "Framer", src: "/images/framer.9a369b4f.png" },
+  { name: "Illustrator", src: "/images/illustrator.d523d72f.png" },
+  { name: "Photoshop", src: "/images/photoshop.5b7ae060.png" },
+  { name: "Maya", src: "/images/maya.b49c7408.png" },
+  { name: "Premiere Pro", src: "/images/premierePro.5b658cf9.png" },
+  { name: "After Effects", src: "/images/afterEffects.a4c77359.png" },
+  { name: "Cursor", kind: "cursor" },
+  { name: "Claude", kind: "claude" },
+  { name: "Gemini", kind: "gemini" },
+  { name: "Perplexity", kind: "perplexity" },
+  { name: "Lovable AI", src: "/images/lovable.svg" },
+  { name: "Miro", src: "/images/miro.svg" },
+];

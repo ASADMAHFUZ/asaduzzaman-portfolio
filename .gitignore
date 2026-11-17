@@ -1,8 +1,10 @@
 .preview-link.txt
 inbox/
 node_modules/
+dist/
 .env
 .env.*
 *.log
 .DS_Store
 Thumbs.db
+_legacy/
