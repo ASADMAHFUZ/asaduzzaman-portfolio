@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { MenuIcon } from './icons';
 
 const NAV_ITEMS = [
@@ -9,19 +9,21 @@ const NAV_ITEMS = [
   { id: 'contact', label: 'Contact' },
 ];
 
-function NavLink({ id, label, activeNav, onNavigate }) {
+function NavLink({ id, label, activeNav, onNavigate, linkRef }) {
   const isActive = activeNav === id;
   return (
     <a
+      ref={linkRef}
       data-nav={id}
-      className={`nav-link${isActive ? ' is-active' : ''} relative px-4 py-2 rounded-xl text-sm font-medium transition-colors duration-300 group`}
+      className={`nav-link relative z-[1] px-4 py-2 rounded-xl text-sm font-medium transition-colors duration-300 group${
+        isActive ? ' is-active' : ''
+      }`}
       href={`#${id}`}
       onClick={(e) => {
         e.preventDefault();
         onNavigate(id);
       }}
     >
-      <div className="nav-pill absolute inset-0 rounded-xl bg-gradient-to-r from-[#FF8D5E] to-[#FF6B6B] shadow-[0_2px_12px_rgba(255,107,107,0.3)]" />
       <span
         className={`nav-label relative z-10 transition-colors duration-300 ${
           isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'
@@ -36,6 +38,9 @@ function NavLink({ id, label, activeNav, onNavigate }) {
 export default function Navbar({ activeNav, menuOpen, setMenuOpen, onNavClick }) {
   const drawerRef = useRef(null);
   const toggleRef = useRef(null);
+  const desktopListRef = useRef(null);
+  const linkRefs = useRef({});
+  const [pill, setPill] = useState({ x: 0, w: 0, ready: false });
 
   const onNavigate = (id) => {
     onNavClick(id);
@@ -63,6 +68,29 @@ export default function Navbar({ activeNav, menuOpen, setMenuOpen, onNavClick })
     else openDrawer();
   };
 
+  useLayoutEffect(() => {
+    const updatePill = () => {
+      const list = desktopListRef.current;
+      const active = linkRefs.current[activeNav];
+      if (!list || !active) return;
+
+      const listRect = list.getBoundingClientRect();
+      const itemRect = active.getBoundingClientRect();
+      const next = {
+        x: itemRect.left - listRect.left,
+        w: itemRect.width,
+        ready: true,
+      };
+      setPill((prev) =>
+        prev.x === next.x && prev.w === next.w && prev.ready === next.ready ? prev : next,
+      );
+    };
+
+    updatePill();
+    window.addEventListener('resize', updatePill);
+    return () => window.removeEventListener('resize', updatePill);
+  }, [activeNav]);
+
   useEffect(() => {
     const onKeyDown = (event) => {
       if (event.key === 'Escape' && menuOpen) closeDrawer();
@@ -83,7 +111,7 @@ export default function Navbar({ activeNav, menuOpen, setMenuOpen, onNavClick })
   return (
     <>
       <header className="w-full fixed top-0 z-50 flex justify-center pointer-events-none">
-        <nav className="pointer-events-auto mt-4 mx-4 px-2 sm:px-3 h-[56px] flex items-center rounded-2xl transition-all duration-500 bg-white/[0.04] backdrop-blur-md border border-white/[0.06]">
+        <nav className="pointer-events-auto mt-4 mx-4 px-2 sm:px-3 h-[56px] flex items-center rounded-2xl bg-white/[0.04] backdrop-blur-md border border-white/[0.06] overflow-hidden">
           <div className="md:hidden px-2">
             <button
               ref={toggleRef}
@@ -96,7 +124,15 @@ export default function Navbar({ activeNav, menuOpen, setMenuOpen, onNavClick })
               <MenuIcon />
             </button>
           </div>
-          <div className="hidden md:flex items-center gap-1">
+          <div ref={desktopListRef} className="nav-list relative hidden md:flex items-center gap-1 overflow-hidden">
+            <span
+              className={`nav-slider${pill.ready ? ' is-ready' : ''}`}
+              style={{
+                width: pill.ready ? `${pill.w}px` : 0,
+                transform: `translateX(${pill.x}px)`,
+              }}
+              aria-hidden="true"
+            />
             {NAV_ITEMS.map((item) => (
               <NavLink
                 key={item.id}
@@ -104,6 +140,9 @@ export default function Navbar({ activeNav, menuOpen, setMenuOpen, onNavClick })
                 label={item.label}
                 activeNav={activeNav}
                 onNavigate={onNavClick}
+                linkRef={(el) => {
+                  linkRefs.current[item.id] = el;
+                }}
               />
             ))}
           </div>

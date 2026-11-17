@@ -33,14 +33,61 @@
   transform: scale(1.1);
 }
 
-.nav-pill {
-  opacity: 0;
+.nav-list {
+  isolation: isolate;
 }
-.nav-link.is-active .nav-pill {
+
+/*
+  Sliding pill: vertical position is fixed with top/margin (NOT transform),
+  so only translateX + width animate. Mixing -translate-y-1/2 with an inline
+  transform caused a ghost pill above the bar during transitions.
+*/
+.nav-slider {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 0;
+  height: 2.25rem; /* 36px / h-9 */
+  margin-top: -1.125rem;
+  border-radius: 0.75rem;
+  background: linear-gradient(90deg, #ff8d5e, #ff6b6b);
+  box-shadow: 0 2px 12px rgba(255, 107, 107, 0.3);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(0);
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.18s ease;
+}
+.nav-slider.is-ready {
   opacity: 1;
+}
+
+.nav-link {
+  -webkit-tap-highlight-color: transparent;
 }
 .nav-link.is-active .nav-label {
   color: #fff;
+}
+
+/* Mobile drawer still uses a local highlight (no sliding track) */
+.drawer-panel .nav-link {
+  position: relative;
+}
+.drawer-panel .nav-link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 0.75rem;
+  background: linear-gradient(90deg, #ff8d5e, #ff6b6b);
+  box-shadow: 0 2px 12px rgba(255, 107, 107, 0.3);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  z-index: 0;
+}
+.drawer-panel .nav-link.is-active::before {
+  opacity: 1;
 }
 
 .reveal {
