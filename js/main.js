@@ -43,27 +43,27 @@ const PROJECTS = [
   },
   {
     id: 4,
-    title: "EcoShop",
-    subtitle: "E-commerce Platform",
-    description: "Sustainable Shopping Experience",
+    title: "CareerMate AI",
+    subtitle: "Smart Career Companion",
+    description: "UI/UX Case Study",
     category: "Website Design",
-    image: "images/carebox.png",
+    image: "images/careermate.png",
+    imagePosition: "object-top",
     links: {
-      figma: "https://figma.com/ecoshop",
-      behance: "https://behance.net/ecoshop",
+      behance:
+        "https://www.behance.net/gallery/243778937/CareerMate-AI-Smart-Career-Companion-UIUX-Case-Study",
     },
   },
   {
     id: 5,
-    title: "MindSpace",
-    subtitle: "Mental Health App",
-    description:
-      "Meditation & Wellness Tracking | Health & Medical | Mobile App Design | UX/UI Design | 3D Animation | Graphic Design | Professional Back-Office Service | UI/UX Design | 3D Animation | Graphic Design | Professional Back-Office Service |",
+    title: "CareBox",
+    subtitle: "Give New Life to Unused Essentials",
+    description: "A Social Impact UX Case Study",
     category: "Mobile App Design",
     image: "images/carebox.png",
     links: {
-      figma: "https://figma.com/mindspace",
-      behance: "https://behance.net/mindspace",
+      behance:
+        "https://www.behance.net/gallery/229055999/CareBox-Give-New-Life-to-Unused-Essentials",
     },
   },
   {
@@ -188,8 +188,12 @@ function renderProjects() {
     img.alt = `${project.title} - ${project.subtitle}`;
     img.width = 600;
     img.height = 400;
-    img.className =
-      "w-full h-48 sm:h-56 md:h-72 object-cover group-hover:scale-105 transition-transform duration-700 ease-out";
+    img.className = [
+      "w-full h-48 sm:h-56 md:h-72 object-cover group-hover:scale-105 transition-transform duration-700 ease-out",
+      project.imagePosition || "",
+    ]
+      .filter(Boolean)
+      .join(" ");
     if (index > 2) img.loading = "lazy";
 
     const badge = document.createElement("div");
