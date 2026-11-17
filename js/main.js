@@ -100,10 +100,8 @@ const ICONS = {
     '<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 384 512" class="w-[18px] h-[18px] text-white" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M14 95.8C14 42.9 56.9 0 109.8 0h164.4C327.1 0 370 42.9 370 95.8c0 33.5-17.2 63-43.2 80.1 26 17.1 43.2 46.6 43.2 80.1 0 52.9-42.9 95.8-95.8 95.8h-2.1c-24.8 0-47.4-9.4-64.4-24.9v88.3C207.7 468.8 163.7 512 110.3 512 57.5 512 14 469.2 14 416.2c0-33.5 17.2-63 43.2-80.1C31.2 319 14 289.5 14 256s17.2-63 43.2-80.1C31.2 158.8 14 129.3 14 95.8zM176.3 191.6H109.8c-35.6 0-64.4 28.8-64.4 64.4s28.6 64.2 64 64.4h66.9V191.6zm31.4 64.4c0 35.6 28.8 64.4 64.4 64.4h2.1c35.6 0 64.4-28.8 64.4-64.4s-28.8-64.4-64.4-64.4h-2.1c-35.6 0-64.4 28.8-64.4 64.4zM109.8 351.8c-35.4.2-64 28.5-64 64.4 0 35.4 29.2 64.4 64.9 64.4 36.3 0 66-29.4 66-65.5v-63.3H109.8zM109.8 31.4c-35.6 0-64.4 28.8-64.4 64.4s28.8 64.4 64.4 64.4h66.5V31.4H109.8zm97.9 128.8h66.5c35.6 0 64.4-28.8 64.4-64.4S309.7 31.4 274.2 31.4h-66.5v128.8z"></path></svg>',
   behance:
     '<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 576 512" class="w-[18px] h-[18px] text-white" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M232 237.2c31.8-15.2 48.4-38.2 48.4-74 0-70.6-52.6-87.8-113.3-87.8H0v354.4h171.8c64.4 0 124.9-30.9 124.9-102.9 0-44.5-21.1-77.4-64.7-89.7zM77.9 135.9H151c28.1 0 53.4 7.9 53.4 40.5 0 30.1-19.7 42.2-47.5 42.2h-79v-82.7zm83.3 233.7H77.9V272h84.9c34.3 0 56 14.3 56 50.6 0 35.8-25.9 47-57.6 47zm358.5-240.7H376V94h143.7v34.9zM576 305.2c0-75.9-44.4-139.2-124.9-139.2-78.2 0-131.3 58.8-131.3 135.8 0 79.9 50.3 134.7 131.3 134.7 61.3 0 101-27.6 120.1-86.3H509c-6.7 21.9-34.3 33.5-55.7 33.5-41.3 0-63-24.2-63-65.3h185.1c.3-4.2.6-8.7.6-13.2zM390.4 274c2.3-33.7 24.7-54.8 58.5-54.8 35.4 0 53.2 20.8 56.2 54.8H390.4z"></path></svg>',
-  external:
-    '<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="w-[18px] h-[18px] text-white" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M256 8C119.3 8 8 119.3 8 256s111.3 248 248 248 248-111.3 248-248S392.7 8 256 8zm164 114.4c29.5 36 47.4 82 47.8 132-7-1.5-77-15.7-147.5-6.8-5.8-14-11.2-26.4-18.6-41.6 78.3-32 113.8-77.5 118.3-83.6zM396.4 97.9c-3.8 5.4-35.7 48.3-111 76.5-34.7-63.8-73.2-116.2-79-124 67.2-16.2 138 1.3 190 47.5zM165.9 64.6c5.6 7.7 43.4 60.1 78.5 122.5-99.1 26.3-186.4 25.9-195.8 25.8C62.4 147.2 106.7 92.6 165.9 64.6zM44.2 256.3c0-2.2 0-4.3.1-6.5 9.3.2 111.9 1.5 217.7-30.1 6.1 11.9 11.9 23.9 17.2 35.9-76.6 21.6-146.2 83.5-180.5 142.3C64.8 360.4 44.2 310.7 44.2 256.3zm81.8 167.1c22.1-45.2 82.2-103.6 167.6-132.8 29.7 77.3 42 142.1 45.2 160.6-68.1 29-150 21.1-212.8-27.8zm248.4 8.5c-2.2-12.9-13.4-74.9-41.2-151 66.4-10.6 124.7 6.8 131.9 9.1-9.4 58.9-43.3 109.8-90.8 142z"></path></svg>',
-  visit:
-    '<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="w-3.5 h-3.5 text-gray-500 group-hover:text-[#FF8D5E] transition-colors duration-300" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M432 320h-32a16 16 0 0 0-16 16v112H64V128h144a16 16 0 0 0 16-16V80a16 16 0 0 0-16-16H48a48 48 0 0 0-48 48v352a48 48 0 0 0 48 48h352a48 48 0 0 0 48-48V336a16 16 0 0 0-16-16zM488 0H360c-21.4 0-32 25.9-17 41l35.7 35.7L135 320.4a24 24 0 0 0 0 34L157.7 377a24 24 0 0 0 34 0L435.3 133.3 471 169c15 15 41 4.5 41-17V24a24 24 0 0 0-24-24z"></path></svg>',
+  globe:
+    '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" class="w-[18px] h-[18px] text-white" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>',
   prev:
     '<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 320 512" class="w-3 h-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M34.5 239 229 44.7c9.4-9.4 24.6-9.4 33.9 0l22.7 22.7c9.4 9.4 9.4 24.5 0 33.9L131.5 256l154 154.7c9.3 9.4 9.3 24.5 0 33.9l-22.7 22.7c-9.4 9.4-24.6 9.4-33.9 0L34.5 273c-9.4-9.4-9.4-24.6 0-34z"></path></svg>',
   next:
@@ -113,6 +111,7 @@ const ICONS = {
 const LINK_META = [
   { key: "figma", label: "Figma", icon: "figma" },
   { key: "behance", label: "Behance", icon: "behance" },
+  { key: "website", label: "Website", icon: "globe" },
 ];
 
 const state = { filter: "All", page: 1 };
@@ -122,14 +121,11 @@ function openUrl(url) {
   window.open(url, "_blank", "noopener,noreferrer");
 }
 
-function projectLiveLink(project) {
-  return project.links?.website || project.links?.app || project.links?.external || "";
-}
-
-function projectLiveLabel(project) {
-  if (project.links?.app) return "Open app";
-  if (project.links?.website || project.links?.external) return "Visit website";
-  return "Open link";
+function resolveProjectLink(project, key) {
+  if (key === "website") {
+    return project.links?.website || project.links?.app || project.links?.external || "";
+  }
+  return project.links?.[key] || "";
 }
 
 function filteredProjects() {
@@ -138,7 +134,7 @@ function filteredProjects() {
 }
 
 function iconButton(project, meta) {
-  const url = project.links?.[meta.key];
+  const url = resolveProjectLink(project, meta.key);
   if (!url) return null;
 
   const button = document.createElement("button");
@@ -237,20 +233,7 @@ function renderProjects() {
     subtitle.textContent = project.subtitle;
     text.append(title, subtitle);
 
-    const liveUrl = projectLiveLink(project);
-    if (liveUrl) {
-      const visit = document.createElement("button");
-      visit.type = "button";
-      visit.className =
-        "flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-lg bg-white/[0.04] border border-white/[0.06] hover:bg-gradient-to-br hover:from-[#FF8D5E]/20 hover:to-[#FF6B6B]/20 hover:border-[#FF8D5E]/30 transition-all duration-300 mt-0.5";
-      visit.setAttribute("aria-label", `${projectLiveLabel(project)}: ${project.title}`);
-      visit.title = projectLiveLabel(project);
-      visit.innerHTML = ICONS.visit;
-      visit.addEventListener("click", () => openUrl(liveUrl));
-      row.append(text, visit);
-    } else {
-      row.append(text);
-    }
+    row.append(text);
     body.append(rule, row);
 
     if (project.description) {
